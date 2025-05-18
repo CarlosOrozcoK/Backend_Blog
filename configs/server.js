@@ -6,6 +6,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
 import limiter from '../src/middlewares/validar-cant-peticiones.js';
+import publicacionRoutes from '../src/publicaciones/publicacion.routes.js';
+import cursoRoutes from '../src/cursos/curso.routes.js';
+import comentarioRoutes from '../src/comentarios/comentario.routes.js';
 
 const middlewares = (app) => {
     app.use(express.urlencoded({ extended: false }));
@@ -17,13 +20,15 @@ const middlewares = (app) => {
 }
 
 const routes = (app) => {
-    
+    app.use('/Backend_Blog/v1/publicaciones', publicacionRoutes);
+    app.use('/Backend_Blog/v1/cursos', cursoRoutes);
+    app.use('/Backend_Blog/v1/comentarios', comentarioRoutes);
 }
 
 const conectarDB = async () => {
     try {
         await dbConnection();
-        console.log('Succesful connecting to database!')
+        console.log('Succesful connecting to database!');
     } catch (error) {
         console.log('Error connecting to database!');
         process.exit(1);
@@ -36,7 +41,7 @@ export const initServer = async () => {
 
     try {
         middlewares(app);
-        conectarDB();
+        await conectarDB();
         routes(app);
         app.listen(port);
         console.log(`Server running on port ${port}!`);
