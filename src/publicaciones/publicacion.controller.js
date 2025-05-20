@@ -14,7 +14,6 @@ export const postPublicacion = async (req, res) => {
 
         await publicacion.save();
 
-        // Pobla los IDs con los nombres de los cursos
         await publicacion.populate('cursos', 'name');
 
         res.status(200).json({
